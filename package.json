@@ -1,0 +1,16 @@
+{
+  "name": "tec-2000-nextjs",
+  "scripts": {
+    "dev": "next",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "next": "^9.0.5",
+    "nprogress": "^0.2.0",
+    "prismic-javascript": "^2.1.1",
+    "prismic-reactjs": "^1.1.0",
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0"
+  }
+}
