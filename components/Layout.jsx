@@ -1,21 +1,16 @@
 import React from 'react';
-import Navbar from '../components/Navbar';
+
 import Footer from '../components/Footer';
 
 function Layout({ children }) {
   return (
     <div className="layout-container">
-      <Navbar />
-
       <main>{children}</main>
-
       <Footer />
-
       <style jsx global>{`
         body {
           background: #fafafa;
         }
-
         .layout-container {
           max-width: 1166px;
           margin: 0 auto;

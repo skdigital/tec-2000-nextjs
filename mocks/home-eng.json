@@ -1,0 +1,23 @@
+[
+  {
+    "title": "Smashing Magazine",
+    "slug": "smashingmagazine",
+    "website": "https://www.smashingmagazine.com",
+    "url": "https://www.smashingmagazine.com/feed/",
+    "lang": "en-gb"
+  },
+  {
+    "title": "CSS Tricks",
+    "slug": "css-tricks",
+    "website": "https://css-tricks.com",
+    "url": "http://feeds.feedburner.com/CssTricks",
+    "lang": "en-gb"
+  },
+  {
+    "title": "freeCodeCamp",
+    "slug": "freecodecamp",
+    "website": "https://www.freecodecamp.org/news/",
+    "url": "https://www.freecodecamp.org/news/rss/",
+    "lang": "en-gb"
+  }
+]

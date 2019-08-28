@@ -1,63 +1,61 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { RichText, Date } from 'prismic-reactjs';
 import { client } from '../prismic-configuration';
 import { parseCookies } from '../lib/parseCookies';
-import { useFilteredLang } from '../hooks/useFilteredLang';
-import Cookie from 'js-cookie';
-import Layout from '../components/Layout';
+import { useLanguageSelector } from '../hooks/useLangSelector';
 import Prismic from 'prismic-javascript';
+import { LanguageContext } from './_app';
 
-const Home = ({ doc, initLangCookie }) => {
-  const [lang, setLang] = useState(initLangCookie || 'en-gb');
-  const [currentLang, setCurrentLang] = useState(useFilteredLang(lang, doc));
+import fetch from 'isomorphic-unfetch';
+
+const Home = ({ doc, languageCookie }) => {
+  const selectedLanguage = useContext(LanguageContext);
+  const [activeLang] = useLanguageSelector(doc, languageCookie);
 
   useEffect(() => {
-    Cookie.set('currentLang', lang);
-    const newLangSelect = useFilteredLang(lang, doc);
-    setCurrentLang(newLangSelect);
-  }, [lang]);
+    async function fetchApi() {
+      const res = await fetch('http://localhost:3000/api/home/[lang]');
+      const data = await res.json();
+      console.log(data);
+    }
+    fetchApi();
+  });
 
   return (
-    <Layout>
-      <section className="home-wrapper">
-        {/* buttons to switch Language */}
-        <button onClick={() => setLang('de-de')}>German</button>
-        <button onClick={() => setLang('en-gb')}>English</button>
+    <section className="home-wrapper">
+      {/* brand heading text */}
+      {RichText.render(activeLang.data.brand_heading)}
 
-        {/* brand heading text */}
-        {RichText.render(currentLang.data.brand_heading)}
+      {/* brand heading image */}
+      <img
+        src={activeLang.data.brand_image.url}
+        alt={activeLang.data.brand_image.alt}
+      />
 
-        {/* brand heading image */}
-        <img
-          src={currentLang.data.brand_image.url}
-          alt={currentLang.data.brand_image.alt}
-        />
+      <style jsx>{`
+        section {
+          grid-column: 2 / 3;
+          grid-row: 3 / 4;
+        }
 
-        <style jsx>{`
-          section {
-            grid-column: 2 / 3;
-            grid-row: 3 / 4;
-          }
-
-          img {
-            max-width: 100%;
-          }
-        `}</style>
-      </section>
-    </Layout>
+        img {
+          max-width: 100%;
+        }
+      `}</style>
+    </section>
   );
 };
 
 Home.getInitialProps = async ({ context, req }) => {
   const cookies = parseCookies(req);
-  const initLangCookie = cookies.currentLang;
+  const languageCookie = cookies.activeLanguage;
   const doc = await client.query(
     Prismic.Predicates.at('document.type', 'homepage'),
     {
       lang: '*'
     }
   );
-  return { doc, initLangCookie };
+  return { doc, languageCookie };
 };
 
 export default Home;
