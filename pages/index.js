@@ -1,21 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { RichText, Date } from 'prismic-reactjs';
 import { client } from '../prismic-configuration';
+import { parseCookies } from '../lib/parseCookies';
+import { useFilteredLang } from '../hooks/useFilteredLang';
+import Cookie from 'js-cookie';
 import Layout from '../components/Layout';
 import Prismic from 'prismic-javascript';
-import Link from 'next/link';
 
-// custom hooks
-import { useFilteredLang } from '../hooks/useFilteredLang';
-
-const Home = ({ doc }) => {
-  // initial language state selection
-  const [lang, setLang] = useState('en-gb');
-  // initial language propagation (props) seed data for component
+const Home = ({ doc, initLangCookie }) => {
+  const [lang, setLang] = useState(initLangCookie || 'en-gb');
   const [currentLang, setCurrentLang] = useState(useFilteredLang(lang, doc));
 
   useEffect(() => {
-    // If languageState changes run language filter and set new language choice
+    Cookie.set('currentLang', lang);
     const newLangSelect = useFilteredLang(lang, doc);
     setCurrentLang(newLangSelect);
   }, [lang]);
@@ -51,14 +48,16 @@ const Home = ({ doc }) => {
   );
 };
 
-Home.getInitialProps = async context => {
+Home.getInitialProps = async ({ context, req }) => {
+  const cookies = parseCookies(req);
+  const initLangCookie = cookies.currentLang;
   const doc = await client.query(
     Prismic.Predicates.at('document.type', 'homepage'),
     {
       lang: '*'
     }
   );
-  return { doc };
+  return { doc, initLangCookie };
 };
 
 export default Home;

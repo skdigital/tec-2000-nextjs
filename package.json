@@ -6,6 +6,8 @@
     "start": "next start"
   },
   "dependencies": {
+    "cookie": "^0.4.0",
+    "js-cookie": "^2.2.1",
     "next": "^9.0.5",
     "nprogress": "^0.2.0",
     "prismic-javascript": "^2.1.1",
