@@ -1,25 +1,27 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { RichText, Date } from 'prismic-reactjs';
 import { client } from '../prismic-configuration';
 import { parseCookies } from '../lib/parseCookies';
-import { useLanguageSelector } from '../hooks/useLangSelector';
 import Prismic from 'prismic-javascript';
+import fetch from 'isomorphic-unfetch';
 import { LanguageContext } from './_app';
 
-import fetch from 'isomorphic-unfetch';
+import { view } from 'react-easy-state';
+import { userLang } from './_app';
 
-const Home = ({ doc, languageCookie }) => {
-  const selectedLanguage = useContext(LanguageContext);
-  const [activeLang] = useLanguageSelector(doc, languageCookie);
+const Home = ({ doc }) => {
+  console.log('Index Page: ', userLang.lang);
+  let ctx = useContext(LanguageContext);
+  const [activeLang, setActiveLang] = useState(doc.results[0]);
 
   useEffect(() => {
     async function fetchApi() {
-      const res = await fetch('http://localhost:3000/api/home/[lang]');
-      const data = await res.json();
-      console.log(data);
+      const res = await fetch(`api/home/${ctx.state.language}`);
+      const doc = await res.json();
+      setActiveLang(doc.results[0]);
     }
     fetchApi();
-  });
+  }, [ctx]);
 
   return (
     <section className="home-wrapper">
@@ -28,8 +30,8 @@ const Home = ({ doc, languageCookie }) => {
 
       {/* brand heading image */}
       <img
-        src={activeLang.data.brand_image.url}
-        alt={activeLang.data.brand_image.alt}
+        src={doc.results[0].data.brand_image.url}
+        alt={doc.results[0].data.brand_image.alt}
       />
 
       <style jsx>{`
@@ -47,15 +49,13 @@ const Home = ({ doc, languageCookie }) => {
 };
 
 Home.getInitialProps = async ({ context, req }) => {
+  console.log(context);
   const cookies = parseCookies(req);
   const languageCookie = cookies.activeLanguage;
   const doc = await client.query(
-    Prismic.Predicates.at('document.type', 'homepage'),
-    {
-      lang: '*'
-    }
+    Prismic.Predicates.at('document.type', 'homepage')
   );
   return { doc, languageCookie };
 };
 
-export default Home;
+export default view(Home);

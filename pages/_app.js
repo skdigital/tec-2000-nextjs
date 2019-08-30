@@ -1,16 +1,11 @@
-import { useLanguageSelector } from '../hooks/useLangSelector';
+import { view, store } from 'react-easy-state';
 import React from 'react';
 import App from 'next/app';
 import Layout from '../components/Layout';
-import Navbar from '../components/Navbar';
+import Cookies from 'js-cookie';
 
+export const userLang = store({ lang: 'en-gb' });
 export const LanguageContext = React.createContext();
-
-// function ContextWrapper({ children }) {
-//   return (
-//     <LanguageContext.Provider value={{}}>{children}</LanguageContext.Provider>
-//   );
-// }
 
 class MyApp extends App {
   // static async getInitialProps({ Component, ctx }) {
@@ -22,18 +17,28 @@ class MyApp extends App {
   //   return { pageProps };
   // }
 
+  componentDidMount() {
+    Cookies.set('storedLang', this.state.language);
+  }
+
+  updateLang = lang => {
+    this.setState({
+      language: lang === this.state.language ? 'en-gb' : 'de-de'
+    });
+  };
+
   state = {
     language: 'en-gb'
   };
 
   render() {
     const { Component, pageProps } = this.props;
-    const { language } = this.state;
 
     return (
-      <LanguageContext.Provider value={language}>
+      <LanguageContext.Provider
+        value={{ state: this.state, updateLang: this.updateLang }}
+      >
         <Layout>
-          <Navbar />
           <Component {...pageProps} />
         </Layout>
       </LanguageContext.Provider>
@@ -41,4 +46,4 @@ class MyApp extends App {
   }
 }
 
-export default MyApp;
+export default view(MyApp);

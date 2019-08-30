@@ -1,7 +1,14 @@
-import fetch from 'isomorphic-unfetch';
+import { parseCookies } from '../../../lib/parseCookies';
+import { client } from '../../../prismic-configuration';
+import Prismic from 'prismic-javascript';
 
 export default async (req, res) => {
-  let r = await fetch('https://jsonplaceholder.typicode.com/posts');
-  let data = await r.json();
-  res.json(data);
+  const doc = await client.query(
+    Prismic.Predicates.at('document.type', 'homepage'),
+    {
+      lang: `${req.query.lang}`
+    }
+  );
+
+  res.status(200).json(doc);
 };

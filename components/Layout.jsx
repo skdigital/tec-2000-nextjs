@@ -1,10 +1,12 @@
 import React from 'react';
+import Navbar from '../components/Navbar';
 
 import Footer from '../components/Footer';
 
 function Layout({ children }) {
   return (
     <div className="layout-container">
+      <Navbar />
       <main>{children}</main>
       <Footer />
       <style jsx global>{`
