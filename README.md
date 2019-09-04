@@ -4,6 +4,8 @@ Find the most recent version of this guide at [here](https://github.com/segmenti
 
 ## Table of Contents
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/skdigital/tec-2000-nextjs.svg)](https://greenkeeper.io/)
+
 - [Questions? Feedback?](#questions-feedback)
 - [Folder Structure](#folder-structure)
 - [Available Scripts](#available-scripts)
