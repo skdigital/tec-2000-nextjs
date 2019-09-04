@@ -8,18 +8,9 @@ export const userLang = store({ lang: 'en-gb' });
 export const LanguageContext = React.createContext();
 
 class MyApp extends App {
-  // static async getInitialProps({ Component, ctx }) {
-  //   let pageProps = {};
-  //   if (Component.getInitialProps) {
-  //     pageProps = await Component.getInitialProps(ctx);
-  //   }
-
-  //   return { pageProps };
-  // }
-
-  componentDidMount() {
-    Cookies.set('storedLang', this.state.language);
-  }
+  state = {
+    language: 'en-gb'
+  };
 
   updateLang = lang => {
     this.setState({
@@ -27,9 +18,18 @@ class MyApp extends App {
     });
   };
 
-  state = {
-    language: 'en-gb'
-  };
+  componentDidMount() {
+    Cookies.set('storedLang', this.state.language);
+  }
+
+  static async getInitialProps({ Component, ctx }) {
+    let pageProps = {};
+    if (Component.getInitialProps) {
+      pageProps = await Component.getInitialProps(ctx);
+    }
+
+    return { pageProps };
+  }
 
   render() {
     const { Component, pageProps } = this.props;

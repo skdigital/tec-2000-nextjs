@@ -1,22 +1,20 @@
 import React, { useState, useContext, useEffect } from 'react';
+import { LanguageContext } from './_app';
 import { RichText, Date } from 'prismic-reactjs';
 import { client } from '../prismic-configuration';
 import { parseCookies } from '../lib/parseCookies';
 import Prismic from 'prismic-javascript';
 import fetch from 'isomorphic-unfetch';
-import { LanguageContext } from './_app';
-
-import { view } from 'react-easy-state';
-import { userLang } from './_app';
+import cookies from 'js-cookie';
 
 const Home = ({ doc }) => {
-  console.log('Index Page: ', userLang.lang);
   let ctx = useContext(LanguageContext);
   const [activeLang, setActiveLang] = useState(doc.results[0]);
 
   useEffect(() => {
+    cookies.set('userLang', ctx.state.language);
     async function fetchApi() {
-      const res = await fetch(`api/home/${ctx.state.language}`);
+      const res = await fetch(`api/lang/${ctx.state.language}/${'homepage'}/`);
       const doc = await res.json();
       setActiveLang(doc.results[0]);
     }
@@ -49,8 +47,8 @@ const Home = ({ doc }) => {
 };
 
 Home.getInitialProps = async ({ context, req }) => {
-  console.log(context);
   const cookies = parseCookies(req);
+  console.log(cookies);
   const languageCookie = cookies.activeLanguage;
   const doc = await client.query(
     Prismic.Predicates.at('document.type', 'homepage')
@@ -58,4 +56,4 @@ Home.getInitialProps = async ({ context, req }) => {
   return { doc, languageCookie };
 };
 
-export default view(Home);
+export default Home;
