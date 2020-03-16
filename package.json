@@ -11,7 +11,7 @@
     "js-cookie": "^2.2.1",
     "next": "^9.0.5",
     "nprogress": "^0.2.0",
-    "prismic-javascript": "^2.1.1",
+    "prismic-javascript": "^2.3.0",
     "prismic-reactjs": "^1.1.0",
     "rc-menu": "^7.4.23",
     "react": "^16.9.0",
