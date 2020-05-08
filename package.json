@@ -13,7 +13,7 @@
     "nprogress": "^0.2.0",
     "prismic-javascript": "^2.1.1",
     "prismic-reactjs": "^1.1.0",
-    "rc-menu": "^7.4.23",
+    "rc-menu": "^8.1.0",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-easy-state": "^6.1.3"
